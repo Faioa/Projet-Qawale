@@ -21,9 +21,13 @@ public class TestMain{
         Pion p15=new PionQawale(1);
         Pion p16=new PionQawale(1);
 
+        //grille.PoserPion(p1,0,0);
+
+        
 
 
 
+        System.out.println(grille.toString());
 
 
 

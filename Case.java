@@ -17,12 +17,15 @@ public class Case{
     }
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        int i=0;
-        while(i<(contenu.size()-1)){
-            sb.append(contenu.get(i)+"-");
-        }
-        sb.append(contenu.get(contenu.size()-1));
+        if (!contenu.isEmpty()){
+            int i=0;
+            while(i<(contenu.size()-1)){
+                sb.append(contenu.get(i)+"-");
+            }
+            sb.append(contenu.get(contenu.size()-1));
 
+        }
         return sb.toString();
+
     }
 }

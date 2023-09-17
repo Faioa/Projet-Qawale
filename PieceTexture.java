@@ -1,0 +1,1 @@
+public enum PieceTexture{HOLLOW,FULL}

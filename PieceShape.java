@@ -1,0 +1,1 @@
+public enum PieceShape{SQUARED,ROUNDED}

@@ -1,0 +1,1 @@
+public enum PieceHeight{TALL,SMALL}

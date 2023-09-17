@@ -1,0 +1,1 @@
+public enum PieceColor{BROWN,ORANGE,BEIGE}

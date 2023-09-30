@@ -20,6 +20,11 @@ public class QuartoCell implements Cell {
 	}
 
 	@Override
+	public boolean isEmpty() {
+		return piece == null;
+	}
+
+	@Override
 	public String toString() {
 		if (piece == null) {
 			return "Empty";

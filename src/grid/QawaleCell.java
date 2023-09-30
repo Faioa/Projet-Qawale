@@ -33,8 +33,8 @@ public class QawaleCell implements Cell {
 	public boolean isEmpty() {
 		return content.size() == 0;
 	}
-
-	@Override
+  
+  @Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		if (!content.isEmpty()) {

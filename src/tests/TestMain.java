@@ -25,7 +25,6 @@ public class TestMain {
 
 		grid.movePiece(0, 0, 0, 1);
 		grid.display();
-
 		System.out.println(grid.toString());
 	}
 }

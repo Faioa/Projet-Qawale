@@ -1,5 +1,4 @@
 package grid;
-
 import java.util.List;
 
 public class Grid {
@@ -49,7 +48,7 @@ public class Grid {
 	public Cell getCell(int x, int y) {
 		return grid[x][y];
 	}
-
+  
 	public void display() {
 		System.out.println("+------+------+------+------+");
 

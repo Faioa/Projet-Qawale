@@ -15,12 +15,16 @@ public class TestMain {
 		Piece p2 = new QawalePiece(PieceColor.CREAM);
 		Piece p3 = new QawalePiece(PieceColor.BROWN);
 
-		grid.PutPiece(p1, 0, 0);
-		grid.PutPiece(p2, 1, 0);
-		grid.PutPiece(p3, 0, 1);
+		grid.putPiece(p1, 0, 0);
+		grid.putPiece(p2, 1, 0);
+		grid.putPiece(p3, 0, 1);
 
 		grid.display();
 
+		System.out.println("\n\n");
+
+		grid.movePiece(0, 0, 0, 1);
+		grid.display();
 		System.out.println(grid.toString());
 	}
 }

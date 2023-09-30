@@ -1,4 +1,5 @@
 package grid;
+import java.util.List;
 
 public class Grid {
 
@@ -9,10 +10,12 @@ public class Grid {
 	private int col;
 	private int lig;
 	private Cell[][] grid;
+	private GridType type;
 
 	public Grid(int lig, int col, GridType type) {
 		this.lig = lig;
 		this.col = col;
+		this.type = type;
 		grid = new Cell[lig][col];
 
 		for (int i = 0; i < lig; i++) {
@@ -26,12 +29,26 @@ public class Grid {
 		}
 	}
 
-	public void PutPiece(Piece p, int x, int y) {
+	public void putPiece(Piece p, int x, int y) {
 		if (x < lig && y < col) {
 			grid[x][y].add(p);
 		}
 	}
 
+	public void movePiece(int oldX, int oldY, int newX, int newY) {
+		if (grid[oldX][oldY].isEmpty() || type == GridType.QUARTO) {
+			return;
+		}
+		List<Piece> oldList = ((QawaleCell) grid[oldX][oldY]).getContent();
+		List<Piece> newList = ((QawaleCell) grid[newX][newY]).getContent();
+		newList.add(oldList.get(0));
+		oldList.remove(0);
+	}
+
+	public Cell getCell(int x, int y) {
+		return grid[x][y];
+	}
+  
 	public void display() {
 		System.out.println("+------+------+------+------+");
 

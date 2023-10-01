@@ -49,7 +49,7 @@ public class Grid {
 	public Cell getCell(int x, int y) {
 		return grid[x][y];
 	}
-
+  
 	public void display() {
 		System.out.println("+------+------+------+------+");
 

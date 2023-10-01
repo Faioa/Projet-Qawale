@@ -1,4 +1,5 @@
 package grid;
+
 import java.util.List;
 
 public class Grid {

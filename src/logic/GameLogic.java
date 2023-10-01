@@ -1,6 +1,11 @@
-package grid;
+package logic;
 
 import java.util.Scanner;
+
+import grid.Cell;
+import grid.Grid;
+import grid.Piece;
+import grid.QawaleCell;
 
 public final class GameLogic {
 	public enum Movement {
@@ -47,6 +52,37 @@ public final class GameLogic {
 			}
 			nbInter++;
 		}
+	}
+
+	public void victoryLogic(Piece piece, Grid g) throws VictoryException, DefeatException {
+
+		// Analyse des lignes
+		for (int i = 0; i < 4; i++) {
+			if (piece.equals(g.getCell(i, 0).getPiece()) && piece.equals(g.getCell(i, 1).getPiece())
+					&& piece.equals(g.getCell(i, 1).getPiece()) && piece.equals(g.getCell(i, 3).getPiece())) {
+				throw new VictoryException("");
+			}
+		}
+
+		// Analyse des colonnes
+		for (int j = 0; j < 4; j++) {
+			if (piece.equals(g.getCell(0, j).getPiece()) && piece.equals(g.getCell(1, j).getPiece())
+					&& piece.equals(g.getCell(2, j).getPiece()) && piece.equals(g.getCell(3, j).getPiece())) {
+				throw new VictoryException("");
+			}
+		}
+
+		// Verifications des diagonales
+		if (piece.equals(g.getCell(0, 0).getPiece()) && piece.equals(g.getCell(1, 1).getPiece())
+				&& piece.equals(g.getCell(2, 2).getPiece()) && piece.equals(g.getCell(3, 3).getPiece())) {
+			throw new VictoryException("");
+		}
+
+		if (piece.equals(g.getCell(0, 3).getPiece()) && piece.equals(g.getCell(1, 2).getPiece())
+				&& piece.equals(g.getCell(2, 1).getPiece()) && piece.equals(g.getCell(3, 0).getPiece())) {
+			throw new VictoryException("");
+		}
+		throw new DefeatException("");
 	}
 
 }

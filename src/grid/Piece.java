@@ -28,6 +28,8 @@ public abstract class Piece {
 		return color;
 	}
 
+	public abstract boolean compare(Piece p);
+
 	@Override
 	public String toString() {
 		if (color == PieceColor.ORANGE) {

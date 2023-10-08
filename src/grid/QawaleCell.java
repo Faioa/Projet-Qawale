@@ -22,6 +22,9 @@ public class QawaleCell implements Cell {
 
 	@Override
 	public Piece getPiece() {
+		if (content.size() == 0) {
+			return null;
+		}
 		return content.get(content.size() - 1);
 	}
 
@@ -33,8 +36,8 @@ public class QawaleCell implements Cell {
 	public boolean isEmpty() {
 		return content.size() == 0;
 	}
-  
-  @Override
+
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		if (!content.isEmpty()) {

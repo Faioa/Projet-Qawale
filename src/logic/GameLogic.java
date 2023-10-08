@@ -68,7 +68,11 @@ public final class GameLogic {
 		scan.close();
 	}
 
-	public void victoryLogic(Piece piece, Grid g) throws VictoryException, DefeatException {
+	public static void victoryLogic(Piece piece, Grid g) throws VictoryException, DefeatException {
+
+		/*
+		 * Expliquer la logique de la fonction en voc
+		 */
 
 		// Analyse des lignes
 		for (int i = 0; i < 4; i++) {

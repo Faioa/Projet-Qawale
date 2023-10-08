@@ -11,11 +11,11 @@ public class QawalePiece extends Piece {
 		if (p == this) {
 			return true;
 		}
-		if (!(p instanceof QuartoPiece)) {
+		if (!(p instanceof QawalePiece)) {
 			return false;
 		}
 
-		QuartoPiece tmp = (QuartoPiece) p;
+		QawalePiece tmp = (QawalePiece) p;
 
 		return this.getColor() == tmp.getColor();
 	}

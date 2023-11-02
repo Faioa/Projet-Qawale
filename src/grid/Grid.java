@@ -21,10 +21,15 @@ public class Grid {
 
 		for (int i = 0; i < lig; i++) {
 			for (int j = 0; j < col; j++) {
+				/*
+				 * Possible d'utiliser une factory ici ? Mais, les pieces ont trop de parametres
+				 * pour que ce soit efficace (on aura une classe par type de piece (une piece
+				 * Qawale orange, une rouge, le pire est donc pour Quarto...).
+				 */
 				if (type == GridType.QAWALE) {
-					grid[i][j] = new QawaleCell();
+					grid[i][j] = new QawaleCell(j, i);
 				} else {
-					grid[i][j] = new QuartoCell();
+					grid[i][j] = new QuartoCell(j, i);
 				}
 			}
 		}
@@ -49,7 +54,7 @@ public class Grid {
 	public Cell getCell(int x, int y) {
 		return grid[x][y];
 	}
-  
+
 	public void display() {
 		System.out.println("+------+------+------+------+");
 

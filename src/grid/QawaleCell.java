@@ -6,8 +6,12 @@ import java.util.List;
 public class QawaleCell implements Cell {
 
 	private List<Piece> content;
+	private int x;
+	private int y;
 
-	public QawaleCell() {
+	public QawaleCell(int x, int y) {
+		this.x = x;
+		this.y = y;
 		content = new ArrayList<Piece>();
 	}
 
@@ -49,6 +53,30 @@ public class QawaleCell implements Cell {
 
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public int getX() {
+		return x;
+	}
+
+	@Override
+	public int getY() {
+		return y;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
+		if (!(o instanceof QawaleCell)) {
+			return false;
+		}
+
+		QawaleCell tmp = (QawaleCell) o;
+
+		return tmp.getX() == x && tmp.getY() == y && content.equals(tmp.getContent());
 	}
 
 }

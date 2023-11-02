@@ -1,6 +1,6 @@
 package logic;
 
-import java.util.Scanner;
+import java.util.List;
 
 import grid.Cell;
 import grid.Grid;
@@ -17,37 +17,37 @@ public final class GameLogic {
 	private GameLogic() {
 	}
 
-	public static void moveCaseContent(Grid g, int x, int y) {
-		Cell c = g.getCell(x, y);
-		int oldX = x;
-		int oldY = y;
+	public static void moveCaseContent(Grid g, Cell initial, List<? extends Cell> movesList)
+			throws RuntimeException, WrongMoveException {
+		int oldX = initial.getX();
+		int oldY = initial.getY();
 		int newX, newY;
-		Scanner scan = new Scanner(System.in);
 		Movement m = Movement.NONE;
 
-		int nbInter = 0;
-		int maxInter = ((QawaleCell) c).getContent().size();
-		while (nbInter < maxInter) {
-			System.out.println("Rentrez la nouvelle coordonnée x de la piece :");
-			newX = Integer.parseInt(scan.nextLine());
-			System.out.println("Rentrez la nouvelle coordonnée y de la piece :");
-			newY = Integer.parseInt(scan.nextLine());
+		try {
+			if (((QawaleCell) initial).getContent().size() < movesList.size()) {
+				throw new WrongMoveException(
+						"There is not the same number of moves as the number of pieces that needs to be moved.");
+			}
+		} catch (RuntimeException e) {
+			System.out.println(
+					"Impossible cast ! The content will not be moved. This case's content needs to be a List implementation.");
+			throw e;
+		}
 
-			if (newX < 0 || newX > 3 || newY < 0 || newY > 3) {
-				System.out.println("Les coordonnées ne sont pas corrects.");
-				continue;
-			} else if (newX == oldX && newY == oldY) {
-				System.out.println("La pièce ne doit pas être placée au même endroit.");
-				continue;
+		for (Cell c : movesList) {
+			newX = c.getX();
+			newY = c.getY();
+
+			if (newX == oldX && newY == oldY) {
+				throw new WrongMoveException("This piece must not be placed on the initial/previous cell.");
 			} else if (oldX != newX && oldY != newY) {
-				System.out.println("La pièce ne peut pas être déplacée en diagonale.");
-				continue;
+				throw new WrongMoveException("This piece cannot be moved diagonally.");
 			} else if ((m == Movement.DOWN && newX == oldX && oldY > newY)
 					|| (m == Movement.UP && newX == oldX && oldY < newY)
 					|| (m == Movement.LEFT && newX > oldX && oldY == newY)
 					|| (m == Movement.RIGHT && newX < oldX && oldY == newY)) {
-				System.out.println("La pièce ne doit pas revenir en arrière.");
-				continue;
+				throw new WrongMoveException("This piece cannot be moved backwards.");
 			} else {
 				g.movePiece(oldX, oldY, newX, newY);
 				oldX = newX;
@@ -63,12 +63,10 @@ public final class GameLogic {
 					m = Movement.LEFT;
 				}
 			}
-			nbInter++;
 		}
-		scan.close();
 	}
 
-	public static void victoryLogic(Piece piece, Grid g) throws VictoryException, DefeatException {
+	public static boolean victoryLogic(Piece piece, Grid g) {
 
 		/*
 		 * Expliquer la logique de la fonction en voc
@@ -78,7 +76,7 @@ public final class GameLogic {
 		for (int i = 0; i < 4; i++) {
 			if (piece.compare(g.getCell(i, 0).getPiece()) && piece.compare(g.getCell(i, 1).getPiece())
 					&& piece.compare(g.getCell(i, 1).getPiece()) && piece.compare(g.getCell(i, 3).getPiece())) {
-				throw new VictoryException("");
+				return true;
 			}
 		}
 
@@ -86,21 +84,21 @@ public final class GameLogic {
 		for (int j = 0; j < 4; j++) {
 			if (piece.compare(g.getCell(0, j).getPiece()) && piece.compare(g.getCell(1, j).getPiece())
 					&& piece.compare(g.getCell(2, j).getPiece()) && piece.compare(g.getCell(3, j).getPiece())) {
-				throw new VictoryException("");
+				return true;
 			}
 		}
 
 		// Verifications des diagonales
 		if (piece.compare(g.getCell(0, 0).getPiece()) && piece.compare(g.getCell(1, 1).getPiece())
 				&& piece.compare(g.getCell(2, 2).getPiece()) && piece.compare(g.getCell(3, 3).getPiece())) {
-			throw new VictoryException("");
+			return true;
 		}
 
 		if (piece.compare(g.getCell(0, 3).getPiece()) && piece.compare(g.getCell(1, 2).getPiece())
 				&& piece.compare(g.getCell(2, 1).getPiece()) && piece.compare(g.getCell(3, 0).getPiece())) {
-			throw new VictoryException("");
+			return true;
 		}
-		throw new DefeatException("");
+		return false;
 	}
 
 }

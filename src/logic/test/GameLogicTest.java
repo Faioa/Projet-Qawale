@@ -1,6 +1,7 @@
 package logic.test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Test;
 
@@ -12,9 +13,7 @@ import grid.Piece.PieceShape;
 import grid.Piece.PieceTexture;
 import grid.QawalePiece;
 import grid.QuartoPiece;
-import logic.DefeatException;
 import logic.GameLogic;
-import logic.VictoryException;
 
 public class GameLogicTest {
 
@@ -51,15 +50,11 @@ public class GameLogicTest {
 		gridQawale.putPiece(thirdPieceQawale, 0, 2);
 		gridQawale.putPiece(fourthPieceQawale, 0, 3);
 
-		assertThrows(VictoryException.class, () -> {
-			GameLogic.victoryLogic(firstPieceQawale, gridQawale);
-		});
+		assertTrue(GameLogic.victoryLogic(firstPieceQawale, gridQawale));
 
 		gridQawale.putPiece(fifthPieceQawale, 0, 3);
 
-		assertThrows(DefeatException.class, () -> {
-			GameLogic.victoryLogic(firstPieceQawale, gridQawale);
-		});
+		assertFalse(GameLogic.victoryLogic(firstPieceQawale, gridQawale));
 	}
 
 	@Test
@@ -69,9 +64,7 @@ public class GameLogicTest {
 		gridQuarto.putPiece(thirdPieceQuarto, 0, 2);
 		gridQuarto.putPiece(fourthPieceQuarto, 0, 3);
 
-		assertThrows(VictoryException.class, () -> {
-			GameLogic.victoryLogic(firstPieceQuarto, gridQuarto);
-		});
+		assertTrue(GameLogic.victoryLogic(firstPieceQuarto, gridQuarto));
 	}
 
 	@Test
@@ -81,9 +74,7 @@ public class GameLogicTest {
 		gridQuarto.putPiece(thirdPieceQuarto, 0, 2);
 		gridQuarto.putPiece(fifthPieceQuarto, 0, 3);
 
-		assertThrows(DefeatException.class, () -> {
-			GameLogic.victoryLogic(firstPieceQuarto, gridQuarto);
-		});
+		assertFalse(GameLogic.victoryLogic(firstPieceQuarto, gridQuarto));
 	}
 
 }

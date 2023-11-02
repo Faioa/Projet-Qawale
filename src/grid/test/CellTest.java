@@ -23,8 +23,8 @@ public class CellTest {
 	QuartoPiece secondPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.ROUNDED,
 			PieceTexture.HOLLOW);
 
-	QawaleCell cellQawale = new QawaleCell();
-	QuartoCell cellQuarto = new QuartoCell();
+	QawaleCell cellQawale = new QawaleCell(0, 0);
+	QuartoCell cellQuarto = new QuartoCell(0, 1);
 
 	@Test
 	public void testQawale1() {

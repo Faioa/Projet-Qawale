@@ -2,6 +2,8 @@ package grid.test;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import grid.Piece.PieceColor;
@@ -15,16 +17,42 @@ import grid.QuartoPiece;
 
 public class CellTest {
 
-	QawalePiece firstPieceQawale = new QawalePiece(PieceColor.CREAM);
-	QawalePiece secondPieceQawale = new QawalePiece(PieceColor.ORANGE);
-	QawalePiece thirdPieceQawale = new QawalePiece(PieceColor.BROWN);
-	QuartoPiece firstPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED,
-			PieceTexture.FULL);
-	QuartoPiece secondPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.ROUNDED,
-			PieceTexture.HOLLOW);
+	private QawalePiece firstPieceQawale;
+	private QawalePiece secondPieceQawale;
+	private QawalePiece thirdPieceQawale;
 
-	QawaleCell cellQawale = new QawaleCell(0, 0);
-	QuartoCell cellQuarto = new QuartoCell(0, 1);
+	private QuartoPiece firstPieceQuarto;
+	private QuartoPiece secondPieceQuarto;
+
+	private QawaleCell cellQawale;
+	private QuartoCell cellQuarto;
+
+	@Before
+	public void setUp() {
+		firstPieceQawale = new QawalePiece(PieceColor.CREAM);
+		secondPieceQawale = new QawalePiece(PieceColor.ORANGE);
+		thirdPieceQawale = new QawalePiece(PieceColor.BROWN);
+
+		firstPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED, PieceTexture.FULL);
+		secondPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.ROUNDED,
+				PieceTexture.HOLLOW);
+
+		cellQawale = new QawaleCell(0, 0);
+		cellQuarto = new QuartoCell(0, 0);
+	}
+
+	@After
+	public void tearDown() {
+		firstPieceQawale = null;
+		secondPieceQawale = null;
+		thirdPieceQawale = null;
+
+		firstPieceQuarto = null;
+		secondPieceQuarto = null;
+
+		cellQawale = null;
+		cellQuarto = null;
+	}
 
 	@Test
 	public void testQawale1() {

@@ -23,7 +23,7 @@ public class Grid {
 			for (int j = 0; j < col; j++) {
 				/*
 				 * Possible d'utiliser une factory ici ? Mais, les pieces ont trop de parametres
-				 * pour que ce soit efficace (on aura une classe par type de piece (une piece
+				 * pour que ce soit efficace : on aurait une classe par type de piece (une piece
 				 * Qawale orange, une rouge, le pire est donc pour Quarto...).
 				 */
 				if (type == GridType.QAWALE) {

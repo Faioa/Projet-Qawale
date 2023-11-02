@@ -2,6 +2,8 @@ package grid.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import grid.Piece.PieceColor;
@@ -13,18 +15,39 @@ import grid.QuartoPiece;
 
 public class PieceTest {
 
-	QawalePiece firstPieceQawale = new QawalePiece(PieceColor.CREAM);
-	QawalePiece secondPieceQawale = new QawalePiece(PieceColor.CREAM);
-	QawalePiece thirdPieceQawale = new QawalePiece(PieceColor.BROWN);
+	private QawalePiece firstPieceQawale;
+	private QawalePiece secondPieceQawale;
+	private QawalePiece thirdPieceQawale;
 
-	QuartoPiece firstPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.ROUNDED,
-			PieceTexture.HOLLOW);
-	QuartoPiece secondPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.SMALL, PieceShape.SQUARED,
-			PieceTexture.FULL);
-	QuartoPiece thirdPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED,
-			PieceTexture.FULL);
-	QuartoPiece fourthPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED,
-			PieceTexture.FULL);
+	private QuartoPiece firstPieceQuarto;
+	private QuartoPiece secondPieceQuarto;
+	private QuartoPiece thirdPieceQuarto;
+	private QuartoPiece fourthPieceQuarto;
+
+	@Before
+	public void setUp() {
+		firstPieceQawale = new QawalePiece(PieceColor.CREAM);
+		secondPieceQawale = new QawalePiece(PieceColor.CREAM);
+		thirdPieceQawale = new QawalePiece(PieceColor.BROWN);
+
+		firstPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.ROUNDED,
+				PieceTexture.HOLLOW);
+		secondPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.SMALL, PieceShape.SQUARED, PieceTexture.FULL);
+		thirdPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED, PieceTexture.FULL);
+		fourthPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED, PieceTexture.FULL);
+	}
+
+	@After
+	public void tearDown() {
+		firstPieceQawale = null;
+		secondPieceQawale = null;
+		thirdPieceQawale = null;
+
+		firstPieceQuarto = null;
+		secondPieceQuarto = null;
+		thirdPieceQuarto = null;
+		fourthPieceQuarto = null;
+	}
 
 	@Test
 	public void testQawale1() {

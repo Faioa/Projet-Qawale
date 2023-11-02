@@ -3,6 +3,8 @@ package logic.test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import grid.Grid;
@@ -17,32 +19,63 @@ import logic.GameLogic;
 
 public class GameLogicTest {
 
-	Grid gridQawale = new Grid(4, 4, GridType.QAWALE);
-	Grid gridQuarto = new Grid(4, 4, GridType.QUARTO);
+	private Grid gridQawale;
+	private Grid gridQuarto;
 
-	QawalePiece firstPieceQawale = new QawalePiece(PieceColor.CREAM);
-	QawalePiece secondPieceQawale = new QawalePiece(PieceColor.CREAM);
-	QawalePiece thirdPieceQawale = new QawalePiece(PieceColor.CREAM);
-	QawalePiece fourthPieceQawale = new QawalePiece(PieceColor.CREAM);
-	QawalePiece fifthPieceQawale = new QawalePiece(PieceColor.BROWN);
+	private QawalePiece firstPieceQawale;
+	private QawalePiece secondPieceQawale;
+	private QawalePiece thirdPieceQawale;
+	private QawalePiece fourthPieceQawale;
+	private QawalePiece fifthPieceQawale;
 
-	QuartoPiece firstPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.ROUNDED,
-			PieceTexture.HOLLOW);
-	QuartoPiece secondPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.SMALL, PieceShape.SQUARED,
-			PieceTexture.FULL);
-	QuartoPiece thirdPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.SMALL, PieceShape.ROUNDED,
-			PieceTexture.FULL);
-	QuartoPiece fourthPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.SQUARED,
-			PieceTexture.FULL);
-	QuartoPiece fifthPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED,
-			PieceTexture.FULL);
+	private QuartoPiece firstPieceQuarto;
+	private QuartoPiece secondPieceQuarto;
+	private QuartoPiece thirdPieceQuarto;
+	private QuartoPiece fourthPieceQuarto;
+	private QuartoPiece fifthPieceQuarto;
+
+	@Before
+	public void setUp() {
+		gridQawale = new Grid(4, 4, GridType.QAWALE);
+		gridQuarto = new Grid(4, 4, GridType.QUARTO);
+
+		firstPieceQawale = new QawalePiece(PieceColor.CREAM);
+		secondPieceQawale = new QawalePiece(PieceColor.CREAM);
+		thirdPieceQawale = new QawalePiece(PieceColor.CREAM);
+		fourthPieceQawale = new QawalePiece(PieceColor.CREAM);
+		fifthPieceQawale = new QawalePiece(PieceColor.BROWN);
+
+		firstPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.ROUNDED,
+				PieceTexture.HOLLOW);
+		secondPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.SMALL, PieceShape.SQUARED, PieceTexture.FULL);
+		thirdPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.SMALL, PieceShape.ROUNDED, PieceTexture.FULL);
+		fourthPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.SQUARED, PieceTexture.FULL);
+		fifthPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED, PieceTexture.FULL);
+	}
+
+	@After
+	public void tearDown() {
+		gridQawale = null;
+		gridQuarto = null;
+
+		firstPieceQawale = null;
+		secondPieceQawale = null;
+		thirdPieceQawale = null;
+		fourthPieceQawale = null;
+		fifthPieceQawale = null;
+
+		firstPieceQuarto = null;
+		secondPieceQuarto = null;
+		thirdPieceQuarto = null;
+		fourthPieceQuarto = null;
+		fifthPieceQuarto = null;
+	}
 
 	/*
 	 * A completer, mais il faut modifier game logic pour : - Supprimer les actions
 	 * peut etre ameliorer les tests pour la victoires en jouant avec les diagonales
 	 * et les verticales
 	 */
-
 	@Test
 	public void testQawale1() {
 		gridQawale.putPiece(firstPieceQawale, 0, 0);

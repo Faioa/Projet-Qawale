@@ -5,15 +5,15 @@ import java.util.List;
 
 public class QawaleCell implements Cell {
 
-	private List<Piece> content;
+	private List<QawalePiece> content;
 
 	public QawaleCell() {
-		content = new ArrayList<Piece>();
+		content = new ArrayList<QawalePiece>();
 	}
 
 	@Override
 	public void add(Piece p) {
-		content.add(p);
+		content.add((QawalePiece)p);
 	}
 
 	public void remove() {
@@ -22,10 +22,13 @@ public class QawaleCell implements Cell {
 
 	@Override
 	public Piece getPiece() {
+		if(content.size()==0) {
+			return null;
+		}
 		return content.get(content.size() - 1);
 	}
 
-	public List<Piece> getContent() {
+	public List<QawalePiece> getContent() {
 		return content;
 	}
 
@@ -33,6 +36,7 @@ public class QawaleCell implements Cell {
 	public boolean isEmpty() {
 		return content.size() == 0;
 	}
+	
   
   @Override
 	public String toString() {

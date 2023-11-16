@@ -29,6 +29,10 @@ public class Grid {
 			}
 		}
 	}
+	
+	public Grid.GridType getGridType(){
+		return type;
+	}
 
 	public void putPiece(Piece p, int x, int y) {
 		if (x < lig && y < col) {
@@ -36,14 +40,15 @@ public class Grid {
 		}
 	}
 
-	public void movePiece(int oldX, int oldY, int newX, int newY) {
+	public void movePiece(int oldX, int oldY, int newX, int newY, int indice) {
 		if (grid[oldX][oldY].isEmpty() || type == GridType.QUARTO) {
 			return;
 		}
-		List<Piece> oldList = ((QawaleCell) grid[oldX][oldY]).getContent();
-		List<Piece> newList = ((QawaleCell) grid[newX][newY]).getContent();
-		newList.add(oldList.get(0));
-		oldList.remove(0);
+		List<QawalePiece> oldList = ((QawaleCell) grid[oldX][oldY]).getContent();
+		List<QawalePiece> newList = ((QawaleCell) grid[newX][newY]).getContent();
+		newList.add(oldList.get(((QawaleCell) grid[oldX][oldY]).getContent().size()-indice));
+		oldList.remove(((QawaleCell) grid[oldX][oldY]).getContent().size()-indice);
+		
 	}
 
 	public Cell getCell(int x, int y) {
@@ -73,5 +78,6 @@ public class Grid {
 
 		return sb.toString();
 	}
+	
 
 }

@@ -1,6 +1,6 @@
 package grid;
 
-public class QawalePiece extends Piece {
+public final class QawalePiece extends Piece {
 
 	public QawalePiece(PieceColor color) {
 		super(color);

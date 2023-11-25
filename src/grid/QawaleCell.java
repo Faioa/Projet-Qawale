@@ -1,54 +1,31 @@
 package grid;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
-public class QawaleCell implements Cell {
+public final class QawaleCell extends Cell {
 
-	private List<QawalePiece> content;
-
-	public QawaleCell() {
-		content = new ArrayList<QawalePiece>();
+	public QawaleCell(int x, int y) {
+		setX(x);
+		setY(y);
+		setContent(new LinkedList<QawalePiece>());
 	}
 
-	@Override
-	public void add(Piece p) {
-		content.add((QawalePiece)p);
+	public void add(QawalePiece p) {
+		super.add(p);
 	}
 
-	public void remove() {
-		content.remove(0);
-	}
-
-	@Override
-	public Piece getPiece() {
-		if (content.size() == 0) {
-			return null;
-		}
-		return content.get(content.size() - 1);
-	}
-
-	public List<QawalePiece> getContent() {
-		return content;
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return content.size() == 0;
-	}
-  
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		if (!content.isEmpty()) {
+		if (!isEmpty()) {
 			int i = 0;
-			while (i < (content.size() - 1)) {
-				sb.append(content.get(i++) + "-");
+			int size = getContent().size();
+			while (i < (size - 1)) {
+				sb.append(getContent().get(i++) + "-");
 			}
-			sb.append(content.get(content.size() - 1));
+			sb.append(getPiece());
 
 		}
 		return sb.toString();
 	}
-
 }

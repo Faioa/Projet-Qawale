@@ -34,8 +34,8 @@ public class Grid {
 			}
 		}
 	}
-	
-	public Grid.GridType getGridType(){
+
+	public Grid.GridType getGridType() {
 		return type;
 	}
 
@@ -45,15 +45,16 @@ public class Grid {
 		}
 	}
 
-	public void movePiece(int oldX, int oldY, int newX, int newY, int indice) {
-		if (grid[oldX][oldY].isEmpty() || type == GridType.QUARTO) {
+	public void movePiece(int oldX, int oldY, int newX, int newY) {
+		if (grid[oldX][oldY].isEmpty()) {
 			return;
 		}
-		List<QawalePiece> oldList = ((QawaleCell) grid[oldX][oldY]).getContent();
-		List<QawalePiece> newList = ((QawaleCell) grid[newX][newY]).getContent();
-		newList.add(oldList.get(((QawaleCell) grid[oldX][oldY]).getContent().size()-indice));
-		oldList.remove(((QawaleCell) grid[oldX][oldY]).getContent().size()-indice);
-		
+
+		List<Piece> oldList = grid[oldX][oldY].getContent();
+		List<Piece> newList = grid[newX][newY].getContent();
+
+		newList.add(oldList.get(0));
+		grid[oldX][oldY].remove();
 	}
 
 	public Cell getCell(int x, int y) {
@@ -83,6 +84,5 @@ public class Grid {
 
 		return sb.toString();
 	}
-	
 
 }

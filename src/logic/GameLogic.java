@@ -2,40 +2,42 @@ package logic;
 
 import java.util.Scanner;
 
-
 import grid.Cell;
 import grid.Grid;
-import grid.Piece;
-import grid.QawaleCell;
 import grid.Grid.GridType;
+import grid.Piece;
 
-public final class GameLogic {
+public class GameLogic {
+
 	public enum Movement {
 		NONE, UP, DOWN, LEFT, RIGHT
 	};
 
-	private GameLogic instance = new GameLogic();
+	private Grid grid;
+	private Player player1;
+	private Player player2;
 
-	private GameLogic() {
+	public GameLogic(Grid grid, Player player1, Player player2) {
+		this.grid = grid;
+		this.player1 = player1;
+		this.player2 = player2;
 	}
-	
-	
+
 	public static void moveCaseContent(Grid g, int x, int y) {
-		
+
 		if (g.getGridType() == GridType.QUARTO) {
 			return;
 		}
-		
+
 		Cell c = g.getCell(x, y);
 		int oldX = x;
 		int oldY = y;
 		int newX, newY;
+		int maxInter = c.getContent().size();
+		int nbInter = maxInter;
 		Scanner scan = new Scanner(System.in);
 		Movement m = Movement.NONE;
 
-		int nbInter = 0;
-		int maxInter = ((QawaleCell) c).getContent().size();
-		int nbIter=maxInter;
 		while (nbInter < maxInter) {
 			g.display();
 			System.out.println("Rentrez la nouvelle coordonnée x de la piece :");
@@ -75,10 +77,10 @@ public final class GameLogic {
 			nbInter++;
 		}
 		scan.close();
-    g.display();
+		g.display();
 	}
 
-	public static void victoryLogic(Piece piece, Grid g) throws VictoryException, DefeatException {
+	public static boolean victoryLogic(Piece piece, Grid g) {
 
 		/*
 		 * Expliquer la logique de la fonction en voc

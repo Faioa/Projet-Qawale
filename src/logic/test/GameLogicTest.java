@@ -43,13 +43,12 @@ public class GameLogicTest {
 		secondPieceQawale = new QawalePiece(PieceColor.CREAM);
 		thirdPieceQawale = new QawalePiece(PieceColor.CREAM);
 		fourthPieceQawale = new QawalePiece(PieceColor.CREAM);
-		fifthPieceQawale = new QawalePiece(PieceColor.BROWN);
+		fifthPieceQawale = new QawalePiece(PieceColor.RED);
 
-		firstPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.ROUNDED,
-				PieceTexture.HOLLOW);
+		firstPieceQuarto = new QuartoPiece(PieceColor.RED, PieceHeight.SMALL, PieceShape.ROUNDED, PieceTexture.HOLLOW);
 		secondPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.SMALL, PieceShape.SQUARED, PieceTexture.FULL);
 		thirdPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.SMALL, PieceShape.ROUNDED, PieceTexture.FULL);
-		fourthPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.SQUARED, PieceTexture.FULL);
+		fourthPieceQuarto = new QuartoPiece(PieceColor.RED, PieceHeight.SMALL, PieceShape.SQUARED, PieceTexture.FULL);
 		fifthPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED, PieceTexture.FULL);
 	}
 

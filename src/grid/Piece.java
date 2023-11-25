@@ -3,7 +3,7 @@ package grid;
 public abstract class Piece {
 
 	public enum PieceColor {
-		BROWN, ORANGE, CREAM
+		RED, CREAM, YELLOW
 	}
 
 	public enum PieceHeight {
@@ -32,13 +32,13 @@ public abstract class Piece {
 
 	@Override
 	public String toString() {
-		if (color == PieceColor.ORANGE) {
-			return "O";
+		if (color == PieceColor.YELLOW) {
+			return "Y";
 		}
 		if (color == PieceColor.CREAM) {
 			return "C";
 		}
-		return "B";
+		return "R";
 	}
 
 }

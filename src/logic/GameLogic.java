@@ -2,10 +2,12 @@ package logic;
 
 import java.util.Scanner;
 
+
 import grid.Cell;
 import grid.Grid;
 import grid.Piece;
 import grid.QawaleCell;
+import grid.Grid.GridType;
 
 public final class GameLogic {
 	public enum Movement {
@@ -16,8 +18,14 @@ public final class GameLogic {
 
 	private GameLogic() {
 	}
-
+	
+	
 	public static void moveCaseContent(Grid g, int x, int y) {
+		
+		if (g.getGridType() == GridType.QUARTO) {
+			return;
+		}
+		
 		Cell c = g.getCell(x, y);
 		int oldX = x;
 		int oldY = y;
@@ -27,7 +35,9 @@ public final class GameLogic {
 
 		int nbInter = 0;
 		int maxInter = ((QawaleCell) c).getContent().size();
+		int nbIter=maxInter;
 		while (nbInter < maxInter) {
+			g.display();
 			System.out.println("Rentrez la nouvelle coordonnée x de la piece :");
 			newX = Integer.parseInt(scan.nextLine());
 			System.out.println("Rentrez la nouvelle coordonnée y de la piece :");
@@ -52,7 +62,6 @@ public final class GameLogic {
 				g.movePiece(oldX, oldY, newX, newY);
 				oldX = newX;
 				oldY = newY;
-
 				if (newX == oldX && oldY > newY) {
 					m = Movement.UP;
 				} else if (newX == oldX && oldY < newY) {
@@ -66,6 +75,7 @@ public final class GameLogic {
 			nbInter++;
 		}
 		scan.close();
+    g.display();
 	}
 
 	public static void victoryLogic(Piece piece, Grid g) throws VictoryException, DefeatException {
@@ -78,7 +88,7 @@ public final class GameLogic {
 		for (int i = 0; i < 4; i++) {
 			if (piece.compare(g.getCell(i, 0).getPiece()) && piece.compare(g.getCell(i, 1).getPiece())
 					&& piece.compare(g.getCell(i, 1).getPiece()) && piece.compare(g.getCell(i, 3).getPiece())) {
-				throw new VictoryException("");
+				return true;
 			}
 		}
 
@@ -86,21 +96,21 @@ public final class GameLogic {
 		for (int j = 0; j < 4; j++) {
 			if (piece.compare(g.getCell(0, j).getPiece()) && piece.compare(g.getCell(1, j).getPiece())
 					&& piece.compare(g.getCell(2, j).getPiece()) && piece.compare(g.getCell(3, j).getPiece())) {
-				throw new VictoryException("");
+				return true;
 			}
 		}
 
 		// Verifications des diagonales
 		if (piece.compare(g.getCell(0, 0).getPiece()) && piece.compare(g.getCell(1, 1).getPiece())
 				&& piece.compare(g.getCell(2, 2).getPiece()) && piece.compare(g.getCell(3, 3).getPiece())) {
-			throw new VictoryException("");
+			return true;
 		}
 
 		if (piece.compare(g.getCell(0, 3).getPiece()) && piece.compare(g.getCell(1, 2).getPiece())
 				&& piece.compare(g.getCell(2, 1).getPiece()) && piece.compare(g.getCell(3, 0).getPiece())) {
-			throw new VictoryException("");
+			return true;
 		}
-		throw new DefeatException("");
+		return false;
 	}
 
 }

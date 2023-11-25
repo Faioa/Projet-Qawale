@@ -59,11 +59,9 @@ public final class GameLogic {
 				System.out.println("La pièce ne doit pas revenir en arrière.");
 				continue;
 			} else {
-				for(int i=nbIter;i>0;i--) {
-					g.movePiece(oldX, oldY, newX, newY, i);
-				}
-				nbIter--;
-
+				g.movePiece(oldX, oldY, newX, newY);
+				oldX = newX;
+				oldY = newY;
 				if (newX == oldX && oldY > newY) {
 					m = Movement.UP;
 				} else if (newX == oldX && oldY < newY) {
@@ -73,63 +71,44 @@ public final class GameLogic {
 				} else {
 					m = Movement.LEFT;
 				}
-				oldX=newX;
-				oldY=newY;
-				
 			}
 			nbInter++;
 		}
-		g.display();
+		scan.close();
+    g.display();
 	}
 
-	public static boolean victoryLogic(Grid g) {
-		
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Vous avez crier !");
-		System.out.println("Votre allignement gagnant est situé sur: ");
-		System.out.println("1. Ligne");
-		System.out.println("2. Colonne");
-		System.out.println("3. Diagonal");
-		int res=scanner.nextInt();
-		if(res==1) {
-			System.out.println("Quel est le numéro de la ligne ?");
-			int numLigne=scanner.nextInt();
-			Piece piece=g.getCell(numLigne, 0).getPiece();
-			
-			// Analyse des lignes
-			
-			if (piece!=null && piece.compare(g.getCell(numLigne, 1).getPiece())
-					&& piece.compare(g.getCell(numLigne, 2).getPiece()) && piece.compare(g.getCell(numLigne, 3).getPiece())) {
-				return true;
-			}
-		}
-		
-		
-		
-		if(res==2) {
-			System.out.println("Quel est le numéro de la colonne ?");
-			int numCol=scanner.nextInt();
-			Piece piece=g.getCell(0, numCol).getPiece();
-			// Analyse des colonnes
-			if (piece!=null && piece.compare(g.getCell(1, numCol).getPiece())
-					&& piece.compare(g.getCell(2, numCol).getPiece()) && piece.compare(g.getCell(3, numCol).getPiece())) {
+	public static void victoryLogic(Piece piece, Grid g) throws VictoryException, DefeatException {
+
+		/*
+		 * Expliquer la logique de la fonction en voc
+		 */
+
+		// Analyse des lignes
+		for (int i = 0; i < 4; i++) {
+			if (piece.compare(g.getCell(i, 0).getPiece()) && piece.compare(g.getCell(i, 1).getPiece())
+					&& piece.compare(g.getCell(i, 1).getPiece()) && piece.compare(g.getCell(i, 3).getPiece())) {
 				return true;
 			}
 		}
 
-		if(res==3) {
-			// Verifications des diagonales
-			Piece piece=g.getCell(0, 0).getPiece();
-			if (piece!=null && piece.compare(g.getCell(1, 1).getPiece())
-					&& piece.compare(g.getCell(2, 2).getPiece()) && piece.compare(g.getCell(3, 3).getPiece())) {
+		// Analyse des colonnes
+		for (int j = 0; j < 4; j++) {
+			if (piece.compare(g.getCell(0, j).getPiece()) && piece.compare(g.getCell(1, j).getPiece())
+					&& piece.compare(g.getCell(2, j).getPiece()) && piece.compare(g.getCell(3, j).getPiece())) {
 				return true;
 			}
-			
-			piece=g.getCell(0, 3).getPiece();
-			if (piece!=null && piece.compare(g.getCell(1, 2).getPiece())
-					&& piece.compare(g.getCell(2, 1).getPiece()) && piece.compare(g.getCell(3, 0).getPiece())) {
-				return true;
-			}
+		}
+
+		// Verifications des diagonales
+		if (piece.compare(g.getCell(0, 0).getPiece()) && piece.compare(g.getCell(1, 1).getPiece())
+				&& piece.compare(g.getCell(2, 2).getPiece()) && piece.compare(g.getCell(3, 3).getPiece())) {
+			return true;
+		}
+
+		if (piece.compare(g.getCell(0, 3).getPiece()) && piece.compare(g.getCell(1, 2).getPiece())
+				&& piece.compare(g.getCell(2, 1).getPiece()) && piece.compare(g.getCell(3, 0).getPiece())) {
+			return true;
 		}
 		return false;
 	}

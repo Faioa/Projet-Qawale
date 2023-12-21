@@ -30,11 +30,11 @@ public class CellTest {
 	@Before
 	public void setUp() {
 		firstPieceQawale = new QawalePiece(PieceColor.CREAM);
-		secondPieceQawale = new QawalePiece(PieceColor.ORANGE);
-		thirdPieceQawale = new QawalePiece(PieceColor.BROWN);
+		secondPieceQawale = new QawalePiece(PieceColor.YELLOW);
+		thirdPieceQawale = new QawalePiece(PieceColor.RED);
 
 		firstPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED, PieceTexture.FULL);
-		secondPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.ROUNDED,
+		secondPieceQuarto = new QuartoPiece(PieceColor.RED, PieceHeight.SMALL, PieceShape.ROUNDED,
 				PieceTexture.HOLLOW);
 
 		cellQawale = new QawaleCell(0, 0);

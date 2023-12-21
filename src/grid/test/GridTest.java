@@ -33,9 +33,9 @@ public class GridTest {
 		gridQuarto = new Grid(4, 4, GridType.QUARTO);
 
 		firstPieceQawale = new QawalePiece(PieceColor.CREAM);
-		secondPieceQawale = new QawalePiece(PieceColor.BROWN);
+		secondPieceQawale = new QawalePiece(PieceColor.RED);
 
-		firstPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.ROUNDED,
+		firstPieceQuarto = new QuartoPiece(PieceColor.RED, PieceHeight.SMALL, PieceShape.ROUNDED,
 				PieceTexture.HOLLOW);
 		secondPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.SMALL, PieceShape.SQUARED, PieceTexture.FULL);
 		thirdPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED, PieceTexture.FULL);

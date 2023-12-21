@@ -28,9 +28,9 @@ public class PieceTest {
 	public void setUp() {
 		firstPieceQawale = new QawalePiece(PieceColor.CREAM);
 		secondPieceQawale = new QawalePiece(PieceColor.CREAM);
-		thirdPieceQawale = new QawalePiece(PieceColor.BROWN);
+		thirdPieceQawale = new QawalePiece(PieceColor.RED);
 
-		firstPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.ROUNDED,
+		firstPieceQuarto = new QuartoPiece(PieceColor.RED, PieceHeight.SMALL, PieceShape.ROUNDED,
 				PieceTexture.HOLLOW);
 		secondPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.SMALL, PieceShape.SQUARED, PieceTexture.FULL);
 		thirdPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED, PieceTexture.FULL);
@@ -53,7 +53,7 @@ public class PieceTest {
 	public void testQawale1() {
 		assertEquals(true, firstPieceQawale.getColor() == PieceColor.CREAM);
 
-		assertEquals(false, thirdPieceQawale.getColor() == PieceColor.ORANGE);
+		assertEquals(false, thirdPieceQawale.getColor() == PieceColor.YELLOW);
 	}
 
 	@Test
@@ -70,7 +70,7 @@ public class PieceTest {
 
 	@Test
 	public void testQuarto1() {
-		assertEquals(true, firstPieceQuarto.getColor() == PieceColor.BROWN);
+		assertEquals(true, firstPieceQuarto.getColor() == PieceColor.RED);
 		assertEquals(false, firstPieceQuarto.getColor() == PieceColor.CREAM);
 
 		assertEquals(true, firstPieceQuarto.getHeight() == PieceHeight.SMALL);

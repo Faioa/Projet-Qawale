@@ -1,35 +1,32 @@
 package grid;
 
-public class QuartoCell implements Cell {
-	private Piece piece;
+import java.util.LinkedList;
 
-	public QuartoCell() {
-		piece = null;
+public final class QuartoCell extends Cell {
+
+	public QuartoCell(int x, int y) {
+		setX(x);
+		setY(y);
+		setContent(new LinkedList<QuartoPiece>());
 	}
 
-	@Override
-	public void add(Piece p) {
-		if (piece == null) {
-			piece = p;
+	public void add(QuartoPiece p) {
+		if (isEmpty() && !p.isPlaced()) {
+			super.add(p);
 		}
 	}
 
 	@Override
-	public Piece getPiece() {
-		return piece;
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return piece == null;
+	public void remove() {
 	}
 
 	@Override
 	public String toString() {
-		if (piece == null) {
+		if (isEmpty()) {
 			return "Empty";
 		}
 
-		return piece.toString();
+		return getPiece().toString();
 	}
+
 }

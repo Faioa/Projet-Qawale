@@ -2,6 +2,8 @@ package grid.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import grid.Grid;
@@ -15,18 +17,42 @@ import grid.QuartoPiece;
 
 public class GridTest {
 
-	Grid gridQawale = new Grid(4, 4, GridType.QAWALE);
-	Grid gridQuarto = new Grid(4, 4, GridType.QUARTO);
+	private Grid gridQawale;
+	private Grid gridQuarto;
 
-	QawalePiece firstPieceQawale = new QawalePiece(PieceColor.CREAM);
-	QawalePiece secondPieceQawale = new QawalePiece(PieceColor.BROWN);
+	private QawalePiece firstPieceQawale;
+	private QawalePiece secondPieceQawale;
 
-	QuartoPiece firstPieceQuarto = new QuartoPiece(PieceColor.BROWN, PieceHeight.SMALL, PieceShape.ROUNDED,
-			PieceTexture.HOLLOW);
-	QuartoPiece secondPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.SMALL, PieceShape.SQUARED,
-			PieceTexture.FULL);
-	QuartoPiece thirdPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED,
-			PieceTexture.FULL);
+	private QuartoPiece firstPieceQuarto;
+	private QuartoPiece secondPieceQuarto;
+	private QuartoPiece thirdPieceQuarto;
+
+	@Before
+	public void setUp() {
+		gridQawale = new Grid(4, 4, GridType.QAWALE);
+		gridQuarto = new Grid(4, 4, GridType.QUARTO);
+
+		firstPieceQawale = new QawalePiece(PieceColor.CREAM);
+		secondPieceQawale = new QawalePiece(PieceColor.RED);
+
+		firstPieceQuarto = new QuartoPiece(PieceColor.RED, PieceHeight.SMALL, PieceShape.ROUNDED,
+				PieceTexture.HOLLOW);
+		secondPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.SMALL, PieceShape.SQUARED, PieceTexture.FULL);
+		thirdPieceQuarto = new QuartoPiece(PieceColor.CREAM, PieceHeight.TALL, PieceShape.SQUARED, PieceTexture.FULL);
+	}
+
+	@After
+	public void tearDown() {
+		gridQawale = null;
+		gridQuarto = null;
+
+		firstPieceQawale = null;
+		secondPieceQawale = null;
+
+		firstPieceQuarto = null;
+		secondPieceQuarto = null;
+		thirdPieceQuarto = null;
+	}
 
 	@Test
 	public void testQawale1() {

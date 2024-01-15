@@ -19,6 +19,7 @@ public abstract class Piece {
 	}
 
 	private PieceColor color;
+	private boolean placed = false;
 
 	public Piece(PieceColor color) {
 		this.color = color;
@@ -26,6 +27,14 @@ public abstract class Piece {
 
 	public PieceColor getColor() {
 		return color;
+	}
+
+	public boolean isPlaced() {
+		return placed;
+	}
+
+	public void place() {
+		placed = true;
 	}
 
 	public abstract boolean compare(Piece p);

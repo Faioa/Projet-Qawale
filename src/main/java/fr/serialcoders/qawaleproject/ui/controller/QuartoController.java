@@ -14,6 +14,7 @@ import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.ActionEvent;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -42,7 +43,8 @@ public class QuartoController extends Application {
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
     private StackPane root;
     private Map<Boundary, Group> map=new HashMap<>();
-    private Map<Group, QuartoPiece> mapPieces = new HashMap<Group, QuartoPiece>();
+    private Map<Boundary, Button> buttonsBounds = new HashMap<>();
+    private Map<Group, QuartoPiece> mapPieces = new HashMap<    >();
     private Group currentGroup=null;
     private boolean dragging;
     private boolean placed;
@@ -51,13 +53,20 @@ public class QuartoController extends Application {
     private QuartoPlayer player1;
     private QuartoPlayer player2;
     private int currentPlayer;
+    private boolean selecting;
+    private boolean placing;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Quarto");
-        primaryStage.setResizable(false);
+        //primaryStage.setResizable(false);
         dragging = false;
-        placed = false;
+        placed = true;
+        selecting = true;
         root = new StackPane();
         root.setStyle("-fx-background-color: #0E0E0D;");
 
@@ -66,23 +75,59 @@ public class QuartoController extends Application {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(932, 486);
 
-        Label labelPause = createLabel("Pause ||", 14, 20, 0);
         Label labelQuarto = createLabel("Quarto", 18, 447, 0);
         Label labelPlayer1 = createLabel("Player 1", 13, 14, 180);
-        Label labelPlaying1 = createLabel("Playing", 11, 14, 200);
-        labelPlaying1.setDisable(true);
+        Label labelPlaying1 = createLabel("Selecting", 11, 14, 200);
         Label labelPlayer2 = createLabel("Player 2", 13, 830, 186);
         Label labelPlaying2 = createLabel("Playing", 11, 830, 206);
         labelPlaying2.setOpacity(0);
 
-        Button buttonQuarto = createButton("Quarto", 14, Color.BLACK, Color.web("#fec704"), 838, 430);
-        buttonQuarto.setOnAction((event) -> {
-            if (grid.verify())
-                System.out.println("Gagné !");
-            else
-                System.out.println("Perdu !");
+        //Pause
+        Button buttonPause = createButton("Pause ||", 14, Color.BLACK, Color.web("#fec704"), 20, 20);
+        buttonPause.setPrefSize(60, 30);
+        buttonsBounds.put(new Boundary(20, 80, 20, 50), buttonPause);
+        buttonPause.setOnAction((event) -> {
+            System.out.println("Pause");
         });
-        Button buttonHelp = createButton("?", 14, Color.BLACK, Color.web("#fec704"), 843, 20);
+
+        // End Game
+        Button buttonQuarto = createButton("Quarto !", 14, Color.BLACK, Color.web("#fec704"), 356, 620);
+        buttonQuarto.setPrefSize(90, 30);
+        buttonsBounds.put(new Boundary(356, 446, 620, 650), buttonQuarto);
+        buttonQuarto.setOnAction((event) -> {
+            /*if currentPLayer == 0 -> player1
+            * sinon player2
+            */
+        });
+
+        // End Turn
+        Button buttonEndTurn = createButton("End Turn", 14, Color.BLACK, Color.web("#fec704"), 466, 620);
+        buttonsBounds.put(new Boundary(466, 556, 620, 650), buttonEndTurn);
+        buttonEndTurn.setOnAction((event) -> {
+            if (selecting || !placed)
+                return;
+            placed = false;
+
+            currentPlayer = (currentPlayer + 1) % 2;
+            if (currentPlayer == 0) {
+                labelPlaying1.setText("Playing");
+                labelPlaying1.setOpacity(1);
+                labelPlaying2.setOpacity(0);
+            } else {
+                labelPlaying2.setText("Playing");
+                labelPlaying1.setOpacity(0);
+                labelPlaying2.setOpacity(1);
+            }
+        });
+        buttonEndTurn.setPrefSize(90, 30);
+
+        // Help
+        Button buttonHelp = createButton("?", 14, Color.BLACK, Color.web("#fec704"), 888, 20);
+        buttonHelp.setPrefSize(30, 30);
+        buttonsBounds.put(new Boundary(888, 918, 20, 50), buttonHelp);
+        buttonHelp.setOnAction((event) -> {
+            System.out.println("Help");
+        });
 
         AnchorPane piecePane = new AnchorPane();
         piecePane.setAccessibleRole(javafx.scene.AccessibleRole.SCROLL_PANE);
@@ -109,10 +154,10 @@ public class QuartoController extends Application {
         piecePane.getChildren().add(plateGroup);
 
         anchorPane.getChildren().addAll(piecePane,
-                labelPause, labelQuarto, labelPlayer1, labelPlaying1,
-                labelPlayer2, labelPlaying2, buttonQuarto, buttonHelp);
+                buttonPause, labelQuarto, labelPlayer1, labelPlaying1,
+                labelPlayer2, labelPlaying2, buttonQuarto, buttonEndTurn, buttonHelp);
 
-        root.getChildren().add(anchorPane);
+        root.getChildren().addAll(anchorPane);
 
         // A supprimer
         Camera camera = new PerspectiveCamera();
@@ -131,7 +176,7 @@ public class QuartoController extends Application {
         scene.setOnMouseReleased((event) -> {
             if (dragging) {
                 dragging = false;
-                rotation.setFromAngle(angleY.get()%360);
+                rotation.setFromAngle(angleY.get() % 360);
                 rotation.playFromStart();
                 angleY.set(0);
                 return;
@@ -140,23 +185,30 @@ public class QuartoController extends Application {
             double mouseX = event.getSceneX();
             double mouseY = event.getSceneY();
 
+            Node tmpButton = findButton(mouseX, mouseY);
+            if (tmpButton != null) {
+                tmpButton.fireEvent(new ActionEvent());
+                return;
+            }
+
             Group tmp = findPiece(mouseX, mouseY);
 
-            if (tmp != null && currentGroup == null) {
+            // Selecting a piece for the opponent
+            if (tmp != null) {
                 currentGroup = tmp;
-                currentPlayer = (currentPlayer + 1) % 2;
+                selecting = false;
+
                 if (currentPlayer == 0) {
-                    player1.choosePiece(mapPieces.get(currentGroup));
-                    labelPlaying1.setOpacity(1);
-                    labelPlaying2.setOpacity(0);
-                } else {
                     player2.choosePiece(mapPieces.get(currentGroup));
-                    labelPlaying1.setOpacity(0);
-                    labelPlaying2.setOpacity(1);
+                    labelPlaying1.setOpacity(0.5);
+                } else {
+                    player1.choosePiece(mapPieces.get(currentGroup));
+                    labelPlaying2.setOpacity(0.5);
                 }
             }
+            // Placing a piece on the board
             else {
-                if (currentGroup == null)
+                if (selecting || placed || currentGroup == null)
                     return;
 
                 QuartoPlayer p = currentPlayer == 0 ? player1 : player2;
@@ -326,14 +378,19 @@ public class QuartoController extends Application {
                 }
 
                 if (placed) {
+                    /*
+                     * DRAW
+                     */
+                    if (player1.getPoolSize() == 0)
+                        System.out.println("Ecran d'égalité");
+
                     removeValue(currentGroup);
                     currentGroup = null;
-                    placed = false;
+                    selecting = true;
                     if (currentPlayer == 0)
-                        labelPlaying1.setOpacity(0.5);
+                        labelPlaying1.setText("Selecting");
                     else
-                        labelPlaying2.setOpacity(0.5);
-                    buttonQuarto.fire();
+                        labelPlaying2.setText("Selecting");
                 }
             }
         });
@@ -368,9 +425,18 @@ public class QuartoController extends Application {
     }
 
     private Group findPiece(double x, double y) {
-        for(Boundary b: map.keySet()) {
+        for(Boundary b : map.keySet()) {
             if(b.inBoundary(x, y)) {
                 return map.get(b);
+            }
+        }
+        return null;
+    }
+
+    private Button findButton(double x, double y) {
+        for(Boundary b : buttonsBounds.keySet()) {
+            if(b.inBoundary(x, y)) {
+                return buttonsBounds.get(b);
             }
         }
         return null;
@@ -542,16 +608,6 @@ public class QuartoController extends Application {
         map.put(new Boundary(660,728, 532,650), pieceR);
     }
 
-    private Line createLine(double endX, double endY, double startX, double startY) {
-        Line line = new Line();
-        line.setEndX(endX);
-        line.setEndY(endY);
-        line.setStartX(startX);
-        line.setStartY(startY);
-        line.setStroke(Color.web("#fec704"));
-        return line;
-    }
-
     private Button createButton(String text, double fontSize, Color textColor, Color bgColor, double layoutX, double layoutY) {
         Button button = new Button(text);
         button.setFont(new Font("Snap ITC", fontSize));
@@ -567,10 +623,6 @@ public class QuartoController extends Application {
                 (int) (color.getRed() * 255),
                 (int) (color.getGreen() * 255),
                 (int) (color.getBlue() * 255));
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 
     private void initMouseControl(SmartGroup group, Scene scene) {

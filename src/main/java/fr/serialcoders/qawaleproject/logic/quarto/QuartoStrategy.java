@@ -18,7 +18,7 @@ public class QuartoStrategy implements Strategy {
             if (origin == null)
                 continue;
 
-            // Analyse des lignes
+            //Lines
             maxAge = 0;
             for (int i = 0; i < 4; i++) {
                 Piece lig=  grid.getCell(j, i).getPiece();
@@ -30,12 +30,12 @@ public class QuartoStrategy implements Strategy {
                     maxAge = lig.getAge();
             }
             if (win) {
-                if (grid.getAge() >= maxAge - 1 && grid.getAge() <= maxAge + 1)
+                if (win(maxAge, grid.getAge()))
                     return true;
             }
 
+            //Columns
             maxAge = 0;
-            // Analyse des colonnes
             for (int i = 0; i < 4; i++) {
                 Piece col =  grid.getCell(i, j).getPiece();
                 if (col == null || !origin.compare(col)) {
@@ -44,15 +44,14 @@ public class QuartoStrategy implements Strategy {
                 }
                 if (maxAge < col.getAge())
                     maxAge = col.getAge();
-                //System.out.println(maxAge + ", " + col.getAge() + ", " + grid.getAge() + ", (" + j + ", " + i +")" );
             }
             if (win) {
-                if (grid.getAge() >= maxAge - 1 && grid.getAge() <= maxAge + 1)
+                if (win(maxAge, grid.getAge()))
                     return true;
             }
         }
 
-        // Verifications des diagonales
+        // Diagonal 1
         maxAge = 0;
         win = true;
         for (int i = 0; i < 3; i++) {
@@ -68,10 +67,11 @@ public class QuartoStrategy implements Strategy {
                 maxAge = p2.getAge();
         }
         if (win) {
-            if (grid.getAge() >= maxAge - 1 && grid.getAge() <= maxAge + 1)
+            if (win(maxAge, grid.getAge()))
                 return true;
         }
 
+        // Diagonal 2
         maxAge = 0;
         win = true;
         for (int i = 0; i < 3;  i++) {
@@ -88,7 +88,7 @@ public class QuartoStrategy implements Strategy {
                 maxAge = p2.getAge();
         }
         if (win) {
-            if (grid.getAge() >= maxAge - 1 && grid.getAge() <= maxAge + 1)
+            if (win(maxAge, grid.getAge()))
                 return true;
         }
 
@@ -98,5 +98,11 @@ public class QuartoStrategy implements Strategy {
     @Override
     public Cell createCell() {
         return new QuartoCell();
+    }
+
+    private boolean win(int maxAge, int gridAge) {
+        if (gridAge >= maxAge && gridAge <= maxAge + 1)
+            return true;
+        return false;
     }
 }

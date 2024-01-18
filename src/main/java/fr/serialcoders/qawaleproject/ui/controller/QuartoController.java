@@ -406,7 +406,7 @@ public class QuartoController extends Application {
         pieceG.translateYProperty().set(-80);
         pieceG.translateZProperty().set(200);
         group.getChildren().add(pieceG);
-        tmp = new QuartoPiece(Piece.PieceColor.CREAM, Piece.PieceHeight.TALL, Piece.PieceShape.ROUNDED, Piece.PieceTexture.HOLLOW);
+        tmp = new QuartoPiece(Piece.PieceColor.CREAM, Piece.PieceHeight.TALL, Piece.PieceShape.SQUARED, Piece.PieceTexture.HOLLOW);
         mapPieces.put(pieceG, tmp);
         map.put(new Boundary(193,236, 71,239), pieceG);
 

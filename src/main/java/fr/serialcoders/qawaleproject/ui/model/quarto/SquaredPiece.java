@@ -2,6 +2,7 @@ package fr.serialcoders.qawaleproject.ui.model.quarto;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -13,9 +14,9 @@ public class SquaredPiece implements Piece {
     private double anchorX;
     private double anchorAngleX = 0;
     private final DoubleProperty angleX = new SimpleDoubleProperty(0);
-    private SmartGroup group;
+    private Group group;
 
-    public SmartGroup startPiece(Color color, boolean tall, boolean hollow) {
+    public Group startPiece(Color color, boolean tall, boolean hollow) {
         Box box = prepareBox(color, tall);
         Box square=prepareSquare(color);
         if(tall) {
@@ -24,7 +25,7 @@ public class SquaredPiece implements Piece {
             square.setTranslateY(-32.56);
         }
 
-        group = new SmartGroup();
+        group = new Group();
         group.getChildren().addAll(box, square);
 
         if(hollow) {
@@ -41,7 +42,7 @@ public class SquaredPiece implements Piece {
         return group;
     }
 
-    public SmartGroup getPiece() {
+    public Group getPiece() {
         return group;
     }
 

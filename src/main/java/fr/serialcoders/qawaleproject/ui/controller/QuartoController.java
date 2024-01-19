@@ -7,12 +7,10 @@ import fr.serialcoders.qawaleproject.logic.quarto.QuartoPiece;
 import fr.serialcoders.qawaleproject.logic.quarto.QuartoPlayer;
 import fr.serialcoders.qawaleproject.logic.quarto.QuartoStrategy;
 import fr.serialcoders.qawaleproject.ui.Boundary;
-import fr.serialcoders.qawaleproject.ui.model.quarto.Board;
+import fr.serialcoders.qawaleproject.ui.model.quarto.QuartoBoard;
 import fr.serialcoders.qawaleproject.ui.model.quarto.RoundedPiece;
 import fr.serialcoders.qawaleproject.ui.model.quarto.SquaredPiece;
-import fr.serialcoders.qawaleproject.ui.model.quarto.SmartGroup;
 import javafx.animation.RotateTransition;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -119,9 +117,9 @@ public class QuartoController {
         });
         buttonEndTurn.setPrefSize(90, 30);
 
-        Board plateau = new Board();
-        SmartGroup group2 = plateau.getBoard();
-        rotation = new RotateTransition(Duration.seconds(0.5), group);
+        QuartoBoard plateau = new QuartoBoard();
+        Group group2 = plateau.getBoard();
+        rotation = new RotateTransition(Duration.seconds(0.5), group2);
         rotation.setAxis(Rotate.Y_AXIS);
         rotation.setToAngle(0);
 
@@ -133,7 +131,6 @@ public class QuartoController {
                 new Rotate(0, Rotate.Z_AXIS),
                 new Translate(20, -100, -300)
         );
-
 
         initPartie(group2);
 
@@ -455,12 +452,12 @@ public class QuartoController {
         return null;
     }
 
-    private void initPartie(SmartGroup group) {
+    private void initPartie(Group group) {
         QuartoPiece tmp;
 
         //Beige textured pieces
         SquaredPiece p = new SquaredPiece();
-        SmartGroup pieceG = p.startPiece(Color.BEIGE, false, true);
+        Group pieceG = p.startPiece(Color.BEIGE, false, true);
         pieceG.translateXProperty().set(-100.0);
         pieceG.translateYProperty().set(-40);
         pieceG.translateZProperty().set(260);
@@ -500,7 +497,7 @@ public class QuartoController {
         map.put(new Boundary(130,178, 99,275), pieceG);
 
         RoundedPiece pr = new RoundedPiece();
-        SmartGroup pieceR = pr.startPiece(Color.BEIGE, true, false);
+        Group pieceR = pr.startPiece(Color.BEIGE, true, false);
         pieceR.translateXProperty().set(-270.0);
         pieceR.translateYProperty().set(-80);
         pieceR.translateZProperty().set(60);
@@ -638,7 +635,7 @@ public class QuartoController {
                 (int) (color.getBlue() * 255));
     }
 
-    private void initMouseControl(SmartGroup group, Scene scene) {
+    private void initMouseControl(Group group, Scene scene) {
         Rotate xRotate = new Rotate(0, Rotate.Y_AXIS);
         group.getTransforms().addAll(xRotate);
         xRotate.angleProperty().bind(angleY);

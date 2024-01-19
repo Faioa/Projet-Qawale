@@ -2,6 +2,7 @@ package fr.serialcoders.qawaleproject.ui.model.quarto;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -15,7 +16,7 @@ public class RoundedPiece implements Piece {
     private final DoubleProperty angleX = new SimpleDoubleProperty(0);
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
 
-    public SmartGroup startPiece(Color color, boolean tall, boolean hollow) {
+    public Group startPiece(Color color, boolean tall, boolean hollow) {
         Cylinder circle = prepareCircle(color);
         Cylinder cylinder = prepareCylinder(color, tall);
         if(tall) {
@@ -24,7 +25,7 @@ public class RoundedPiece implements Piece {
             circle.setTranslateY(-32.80);
         }
 
-        SmartGroup group = new SmartGroup();
+        Group group = new Group();
         group.getChildren().addAll(cylinder, circle);
 
         if(hollow) {

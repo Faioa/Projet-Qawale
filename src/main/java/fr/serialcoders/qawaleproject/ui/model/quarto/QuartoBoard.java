@@ -1,5 +1,6 @@
 package fr.serialcoders.qawaleproject.ui.model.quarto;
 
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
@@ -7,14 +8,14 @@ import javafx.scene.shape.Cylinder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board {
+public class QuartoBoard {
 
-    private SmartGroup board;
+    private Group board;
 
     private static final int WIDTH = 1400;
     private static final int HEIGHT = 1000;
 
-    public Board(){
+    public QuartoBoard(){
         //Circle
         List<Cylinder> circles = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
@@ -26,7 +27,7 @@ public class Board {
         Cylinder boardPart = prepareBoard();
         Cylinder plateauBack = prepareBack();
         plateauBack.setTranslateY(1);
-        SmartGroup group = new SmartGroup();
+        Group group = new Group();
 
         int rows = 4;
         int cols = 4;
@@ -60,7 +61,7 @@ public class Board {
         this.board=group;
     }
 
-    public SmartGroup getBoard() {
+    public Group getBoard() {
         return board;
     }
 

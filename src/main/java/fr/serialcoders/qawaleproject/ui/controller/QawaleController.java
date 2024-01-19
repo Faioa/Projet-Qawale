@@ -10,19 +10,16 @@ import fr.serialcoders.qawaleproject.logic.qawale.QawaleStrategy;
 import fr.serialcoders.qawaleproject.ui.Boundary;
 import fr.serialcoders.qawaleproject.ui.model.qawale.QawaleBoard;
 import fr.serialcoders.qawaleproject.ui.model.qawale.QawalePieceStack;
-import fr.serialcoders.qawaleproject.ui.model.quarto.SmartGroup;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -112,8 +109,9 @@ public class QawaleController {
 
         dragging = false;
         placed = false;
+
         QawaleBoard plateau = new QawaleBoard();
-        SmartGroup group = plateau.getBoard();
+        Group group = plateau.getBoard();
         rotation = new RotateTransition(Duration.seconds(0.5), group);
         rotation.setAxis(Rotate.Y_AXIS);
         rotation.setToAngle(0);
@@ -121,7 +119,8 @@ public class QawaleController {
         Group plateGroup = new Group();
         plateGroup.getChildren().add(group);
 
-        plateGroup.getTransforms().addAll(new Rotate(35, Rotate.X_AXIS),
+        plateGroup.getTransforms().addAll(new Rotate(
+                35, Rotate.X_AXIS),
                 new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS),
                 new Translate(20, -100, -300)
@@ -529,13 +528,15 @@ public class QawaleController {
 
                 if (cptdepile == 0) {
                     clicked = false;
-                    if (lgauche.size() == 0 && ldroite.size() == 0) {
-                        showVictoryDialog("DRAW", "Nobody won this game...", null);
-                    }
 
                     if (grid.verify()) {
                         showVictoryDialog("VICTORY", "won the game !", myplayer);
+                        return;
+                    }
 
+                    if (lgauche.size() == 0 && ldroite.size() == 0) {
+                        showVictoryDialog("DRAW", "Nobody won this game...", null);
+                        return;
                     }
 
                     test = -1;
@@ -1000,7 +1001,7 @@ public class QawaleController {
         }
     }
 
-    private void initPartie(SmartGroup group) {
+    private void initPartie(Group group) {
         QawalePiece tmp;
 
         // 1st line
@@ -1029,7 +1030,7 @@ public class QawaleController {
 
         // Pieces
         fr.serialcoders.qawaleproject.ui.model.qawale.QawalePiece p = new fr.serialcoders.qawaleproject.ui.model.qawale.QawalePiece();
-        SmartGroup pieceG = p.startPiece(Color.ORANGE);
+        Group pieceG = p.startPiece(Color.ORANGE);
         pieceG.translateXProperty().set(-122.0);
         pieceG.translateYProperty().set(-5);
         pieceG.translateZProperty().set(116);
@@ -1292,7 +1293,7 @@ public class QawaleController {
                 (int) (color.getBlue() * 255));
     }
 
-    private void initMouseControl(SmartGroup group, Scene scene) {
+    private void initMouseControl(Group group, Scene scene) {
         Rotate xRotate = new Rotate(0, Rotate.Y_AXIS);
         group.getTransforms().addAll(xRotate);
         xRotate.angleProperty().bind(angleY);

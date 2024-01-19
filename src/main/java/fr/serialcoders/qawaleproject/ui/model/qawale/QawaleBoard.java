@@ -1,7 +1,6 @@
 package fr.serialcoders.qawaleproject.ui.model.qawale;
 
 import fr.serialcoders.qawaleproject.ui.Boundary;
-import fr.serialcoders.qawaleproject.ui.model.quarto.SmartGroup;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -17,7 +16,7 @@ import java.util.Map;
 
 public class QawaleBoard {
 
-    private SmartGroup board;
+    private Group board;
     private static final int BOARD_SIZE = 4;
     private static final int WIDTH = 1400;
     private static final int HEIGHT = 1000;
@@ -40,7 +39,7 @@ public class QawaleBoard {
         plateau_back.setTranslateY(10);
         plateaue.setTranslateY(8);
         //circle.setTranslateY(-10);
-        SmartGroup group = new SmartGroup();
+        Group group = new Group();
 
         int rows = 4;
         int cols = 4;
@@ -202,7 +201,7 @@ public class QawaleBoard {
         this.board =group;
     }
 
-    public SmartGroup getBoard() {
+    public Group getBoard() {
         return board;
     }
 

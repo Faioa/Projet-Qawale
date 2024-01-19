@@ -19,4 +19,8 @@ public class Player {
         return grid;
     }
 
+    public String getName() {
+        return name;
+    }
+
 }

@@ -2,7 +2,9 @@ package fr.serialcoders.qawaleproject.logic.quarto;
 
 import fr.serialcoders.qawaleproject.logic.Cell;
 import fr.serialcoders.qawaleproject.logic.Piece;
+import fr.serialcoders.qawaleproject.logic.qawale.QawaleCell;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class QuartoCell extends Cell {
@@ -22,6 +24,13 @@ public class QuartoCell extends Cell {
 
     @Override
     public void remove() {
+    }
+
+    @Override
+    public Cell copy() {
+        QuartoCell retval = new QuartoCell();
+        retval.setContent(new ArrayList<>(getContent()));
+        return retval;
     }
 
 }

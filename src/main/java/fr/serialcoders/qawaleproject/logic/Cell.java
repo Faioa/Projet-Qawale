@@ -5,10 +5,10 @@ import java.util.List;
 
 public abstract class Cell {
 
-    private List<Piece> content = null;
+    private List<Piece> content = new ArrayList<>();
     private Piece piece = null;
 
-    protected void add(Piece p) {
+    public void add(Piece p) {
         content.add(p);
         piece = p;
     }
@@ -56,6 +56,21 @@ public abstract class Cell {
         Cell tmp = (Cell) o;
 
         return getPiece().equals(tmp.getPiece());
+    }
+
+    public void clear() {
+        content.clear();
+        piece = null;
+    }
+
+    public abstract Cell copy();
+
+    public Piece getPieceIndex(int index) {
+        try {
+            return content != null ? content.get(index) : null;
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
 }

@@ -54,6 +54,17 @@ public class Grid {
         grid[oldX][oldY].remove();
     }
 
+    public void display() {
+        System.out.println("+------+------+------+------+");
+
+        for (int i = 0; i < lig; i++) {
+            for (int j = 0; j < col; j++) {
+                System.out.print("| " + grid[i][j] + " ");
+            }
+            System.out.println("|\n+------+------+------+------+");
+        }
+    }
+
     public boolean verify() {
         return strategy.verify(this);
     }

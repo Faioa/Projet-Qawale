@@ -2,6 +2,7 @@ package fr.serialcoders.qawaleproject.ui.controller;
 
 import fr.serialcoders.qawaleproject.logic.Grid;
 import fr.serialcoders.qawaleproject.logic.Piece;
+import fr.serialcoders.qawaleproject.logic.Player;
 import fr.serialcoders.qawaleproject.logic.quarto.QuartoPiece;
 import fr.serialcoders.qawaleproject.logic.quarto.QuartoPlayer;
 import fr.serialcoders.qawaleproject.logic.quarto.QuartoStrategy;
@@ -12,36 +13,38 @@ import fr.serialcoders.qawaleproject.ui.model.quarto.SquaredPiece;
 import fr.serialcoders.qawaleproject.ui.model.quarto.SmartGroup;
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
-public class QuartoController extends Application {
+public class QuartoController {
 
     private double anchorY;
     private double anchorAngleY = 0;
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
-    private StackPane root;
     private Map<Boundary, Group> map=new HashMap<>();
     private Map<Boundary, Button> buttonsBounds = new HashMap<>();
     private Map<Group, QuartoPiece> mapPieces = new HashMap<    >();
@@ -54,56 +57,51 @@ public class QuartoController extends Application {
     private QuartoPlayer player2;
     private int currentPlayer;
     private boolean selecting;
-    private boolean placing;
+    private Scene scene;
+    private Label labelPlaying1;
+    private Label labelPlaying2;
+    private Group group;
+    private Button buttonPause;
+    private Button buttonEndTurn;
+    private Button buttonHelp;
+    private Button buttonQuarto;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Quarto");
-        //primaryStage.setResizable(false);
+    public void initialize() {
         dragging = false;
         placed = true;
         selecting = true;
-        root = new StackPane();
-        root.setStyle("-fx-background-color: #0E0E0D;");
 
         grid = new Grid(4, 4, new QuartoStrategy());
 
-        AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(932, 486);
-
-        Label labelQuarto = createLabel("Quarto", 18, 447, 0);
-        Label labelPlayer1 = createLabel("Player 1", 13, 14, 180);
-        Label labelPlaying1 = createLabel("Selecting", 11, 14, 200);
-        Label labelPlayer2 = createLabel("Player 2", 13, 830, 186);
-        Label labelPlaying2 = createLabel("Playing", 11, 830, 206);
-        labelPlaying2.setOpacity(0);
-
-        //Pause
-        Button buttonPause = createButton("Pause ||", 14, Color.BLACK, Color.web("#fec704"), 20, 20);
-        buttonPause.setPrefSize(60, 30);
-        buttonsBounds.put(new Boundary(20, 80, 20, 50), buttonPause);
+        buttonsBounds.put(new Boundary(20, 100, 20, 50), buttonPause);
         buttonPause.setOnAction((event) -> {
-            System.out.println("Pause");
+            showPause();
         });
 
-        // End Game
-        Button buttonQuarto = createButton("Quarto !", 14, Color.BLACK, Color.web("#fec704"), 356, 620);
-        buttonQuarto.setPrefSize(90, 30);
         buttonsBounds.put(new Boundary(356, 446, 620, 650), buttonQuarto);
         buttonQuarto.setOnAction((event) -> {
-            /*if currentPLayer == 0 -> player1
-            * sinon player2
-            */
+            boolean result = grid.verify();
+            int winnerId = result ? currentPlayer : (currentPlayer + 1) % 2;
+            Player winner = winnerId == 0 ? player1 : player2;
+
+            if (result)
+                showVictoryDialog("VICTORY", "won the game rightfully !", winner);
+            else
+                showVictoryDialog("VICTORY", "won the game because its opponent called a wrong Quarto!", winner);
         });
 
-        // End Turn
-        Button buttonEndTurn = createButton("End Turn", 14, Color.BLACK, Color.web("#fec704"), 466, 620);
+        buttonsBounds.put(new Boundary(888, 918, 20, 50), buttonHelp);
+        buttonHelp.setOnAction(event -> {
+            showHelp();
+        });
+
         buttonsBounds.put(new Boundary(466, 556, 620, 650), buttonEndTurn);
         buttonEndTurn.setOnAction((event) -> {
+
+            if (player1.getPoolSize() == 0 && player2.getPoolSize() == 0) {
+                showVictoryDialog("DRAW", "Nobody won this game...", null);
+            }
+
             if (selecting || !placed)
                 return;
             placed = false;
@@ -121,29 +119,14 @@ public class QuartoController extends Application {
         });
         buttonEndTurn.setPrefSize(90, 30);
 
-        // Help
-        Button buttonHelp = createButton("?", 14, Color.BLACK, Color.web("#fec704"), 888, 20);
-        buttonHelp.setPrefSize(30, 30);
-        buttonsBounds.put(new Boundary(888, 918, 20, 50), buttonHelp);
-        buttonHelp.setOnAction((event) -> {
-            System.out.println("Help");
-        });
-
-        AnchorPane piecePane = new AnchorPane();
-        piecePane.setAccessibleRole(javafx.scene.AccessibleRole.SCROLL_PANE);
-        piecePane.setDisable(true);
-        piecePane.setLayoutX(83);
-        piecePane.setLayoutY(49);
-        piecePane.setPrefSize(828, 381);
-
         Board plateau = new Board();
-        SmartGroup group=plateau.getBoard();
+        SmartGroup group2 = plateau.getBoard();
         rotation = new RotateTransition(Duration.seconds(0.5), group);
         rotation.setAxis(Rotate.Y_AXIS);
         rotation.setToAngle(0);
 
         Group plateGroup = new Group();
-        plateGroup.getChildren().add(group);
+        plateGroup.getChildren().add(group2);
         plateGroup.getTransforms().addAll(
                 new Rotate(35, Rotate.X_AXIS),
                 new Rotate(0, Rotate.Y_AXIS),
@@ -151,27 +134,21 @@ public class QuartoController extends Application {
                 new Translate(20, -100, -300)
         );
 
-        piecePane.getChildren().add(plateGroup);
 
-        anchorPane.getChildren().addAll(piecePane,
-                buttonPause, labelQuarto, labelPlayer1, labelPlaying1,
-                labelPlayer2, labelPlaying2, buttonQuarto, buttonEndTurn, buttonHelp);
-
-        root.getChildren().addAll(anchorPane);
-
-        // A supprimer
-        Camera camera = new PerspectiveCamera();
-        Scene scene = new Scene(root, 932, 700,true, SceneAntialiasing.BALANCED);
-        scene.setFill(Color.SILVER);
-        scene.setCamera(camera);
-
-        initPartie(group);
+        initPartie(group2);
 
         List<QuartoPiece> values = new ArrayList<>(mapPieces.values());
-        System.out.println(mapPieces.size());
-        player1 = new QuartoPlayer("player1", grid, values);
-        player2 = new QuartoPlayer("player2", grid, values);
-        currentPlayer = 0;
+        player1 = new QuartoPlayer("Player 1", grid, values);
+        player2 = new QuartoPlayer("Player 2", grid, values);
+
+        currentPlayer = new Random().nextInt(2);
+        if (currentPlayer == 0) {
+            labelPlaying1.setOpacity(1);
+            labelPlaying2.setOpacity(0);
+        } else {
+            labelPlaying1.setOpacity(0);
+            labelPlaying2.setOpacity(1);
+        }
 
         scene.setOnMouseReleased((event) -> {
             if (dragging) {
@@ -378,12 +355,6 @@ public class QuartoController extends Application {
                 }
 
                 if (placed) {
-                    /*
-                     * DRAW
-                     */
-                    if (player1.getPoolSize() == 0)
-                        System.out.println("Ecran d'égalité");
-
                     removeValue(currentGroup);
                     currentGroup = null;
                     selecting = true;
@@ -395,15 +366,57 @@ public class QuartoController extends Application {
             }
         });
 
-        group.translateXProperty().set(350);
-        group.translateYProperty().set(200);
-        group.translateZProperty().set(-100);
+        group2.translateXProperty().set(350);
+        group2.translateYProperty().set(200);
+        group2.translateZProperty().set(-100);
 
-        initMouseControl(group, scene);
+        initMouseControl(group2, scene);
 
-        primaryStage.setScene(scene);
+        group = plateGroup;
+    }
 
-        primaryStage.show();
+    public void setLabelPlaying1(Label labelPlaying1) {
+        this.labelPlaying1 = labelPlaying1;
+    }
+
+    public void setLabelPlaying2(Label labelPlaying2) {
+        this.labelPlaying2 = labelPlaying2;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+
+    public void setButtonPause(Button buttonPause) {
+        this.buttonPause = buttonPause;
+    }
+
+    public void setButtonEndTurn(Button buttonEndTurn) {
+        this.buttonEndTurn = buttonEndTurn;
+    }
+
+    public void setButtonHelp(Button buttonHelp) {
+        this.buttonHelp = buttonHelp;
+    }
+
+    public void setButtonQuarto(Button buttonQuarto) {
+        this.buttonQuarto = buttonQuarto;
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public Label getLabelPlaying1() {
+        return labelPlaying1;
+    }
+
+    public Label getLabelPlaying2() {
+        return labelPlaying2;
+    }
+
+    public Group getGroup() {
+        return group;
     }
 
     private void removeValue(Group g) {
@@ -418,7 +431,7 @@ public class QuartoController extends Application {
     private Label createLabel(String text, double fontSize, double layoutX, double layoutY) {
         Label label = new Label(text);
         label.setFont(new Font("Snap ITC", fontSize));
-        label.setTextFill(Color.web("#fec704"));
+        label.setTextFill(Color.web("#08d19a"));
         label.setLayoutX(layoutX);
         label.setLayoutY(layoutY);
         return label;
@@ -640,6 +653,244 @@ public class QuartoController extends Application {
                 dragging = true;
             angleY.set(anchorAngleY - (event.getSceneX() - anchorY));
         });
+    }
+    private void showPause() {
+        Stage primaryStage = (Stage) scene.getWindow();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Pause");
+        alert.setHeight(200);
+        alert.setWidth(200);
+        alert.setResizable(false);
+        DialogPane dialogPane = alert.getDialogPane();
+
+        dialogPane.setStyle("-fx-background-color: black;");
+        VBox vbox = new VBox();
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(10);
+
+        Button homeButton = createButton("Home", 14, Color.BLACK, Color.web("#08d19a"), 843, 20);
+        homeButton.setOnAction(e -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/fr/serialcoders/qawaleproject/fxml/home.fxml"));
+                Camera camera = new PerspectiveCamera();
+                Scene scene = new Scene(root, 700, 400);
+                scene.setFill(Color.SILVER);
+                scene.setCamera(camera);
+                primaryStage.setTitle("SerialCoders' Games");
+                primaryStage.setScene(scene);
+                primaryStage.show();
+                Platform.runLater(alert::close);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
+
+        Button restartButton = createButton("Restart", 14, Color.BLACK, Color.web("#08d19a"), 843, 20);
+        restartButton.setOnAction(e -> {
+            setNewGame();
+            Platform.runLater(alert::close);
+            primaryStage.show();
+        });
+
+        Button resumeButton = createButton("Resume", 14, Color.BLACK, Color.web("#08d19a"), 843, 20);
+        resumeButton.setOnAction(e -> {
+            Platform.runLater(alert::close);
+        });
+
+        vbox.getChildren().addAll(homeButton,restartButton, resumeButton);
+
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setHeaderText("The game was paused");
+        alert.getDialogPane().getChildren().remove(2);
+        alert.getDialogPane().setContent(vbox);
+
+        alert.showAndWait();
+    }
+    private void showHelp() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Rules");
+        alert.setHeaderText(null);
+        alert.setHeight(650);
+        alert.setWidth(700);
+        alert.setResizable(false);
+        DialogPane dialogPane = alert.getDialogPane();
+
+        dialogPane.setStyle("-fx-background-color: black;");
+
+        VBox anchorPane = new VBox();
+        anchorPane.setAlignment(Pos.CENTER);
+        anchorPane.setPrefSize(600, 611);
+
+        Label titleLabel = new Label("SerialCoders' Games");
+        titleLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        titleLabel.setPrefSize(204, 300);
+        titleLabel.setTextFill(Color.web("#08d19a"));
+        titleLabel.setFont(new Font("Snap ITC", 18.0));
+
+        Pane rulesPane = new Pane();
+        rulesPane.setLayoutX(56);
+        rulesPane.setLayoutY(90);
+        rulesPane.setPrefSize(412, 550);
+        rulesPane.setStyle("-fx-background-color: white; -fx-background-radius: 30;");
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPrefHeight(480);
+        scrollPane.setPrefWidth(550);
+        scrollPane.setLayoutX(15);
+        scrollPane.setLayoutY(15);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+
+        Text rules = new Text("AIM OF THE GAME\n\n" + "To make a line of 4 similar pieces by color, shape, height or texture : Either horizontally, vertically or diagonally.\n\n\n"
+                + "HOW TO PLAY\n\n"
+                + "The first player is decided at random. On their turn, the player chooses a piece for its opponent who then needs to place it on the board.\n\n"
+                + "Note : You need to select a piece whihc was not already placed on the board and you can only place one piece per spot.\n\n"
+                + "The active player then select a piece for its opponent and so on.\n\n\n"
+                + "END OF THE GAME\n\n"
+                + "The first active player to recognize a line of 4 similar pieces presses \"Quarto\". If it was an effective line of 4 similar pieces, the player wins. Otherwise, it loses.\n\n"
+                + "Note : If both players don't recognize the line on their first turn following its formation, this line becomes invalidated for the rest of the game.\n\n"
+                + "Note : If both players have played all of their pieces and no one has recognized a line, the game ends in a draw.\n\n");
+        rules.setTextAlignment(TextAlignment.CENTER);
+        rules.setWrappingWidth(530);
+        rules.setFont(new Font("Snap ITC", 14));
+        scrollPane.setContent(rules);
+
+        rulesPane.getChildren().add(scrollPane);
+
+        anchorPane.getChildren().addAll(rulesPane);
+
+        alert.getDialogPane().setContent(anchorPane);
+
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setHeaderText("Quarto Rules");
+        alert.getDialogPane().setContent(anchorPane);
+
+        alert.showAndWait();
+    }
+    private void showVictoryDialog(String title, String Message, Player myplayer) {
+        Stage primaryStage = (Stage) scene.getWindow();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        if (myplayer == null)
+            alert.setHeaderText(Message);
+        else
+            alert.setHeaderText(myplayer + " " + Message);
+        alert.setHeight(200);
+        alert.setWidth(400);
+        alert.setResizable(false);
+
+        DialogPane dialogPane = alert.getDialogPane();
+
+        dialogPane.setStyle("-fx-background-color: black;");
+        VBox vbox = new VBox();
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(10);
+
+        Button homeButton = createButton("Home", 14, Color.BLACK, Color.web("#08d19a"), 843, 20);
+        homeButton.setOnAction(e -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/fr/serialcoders/qawaleproject/fxml/home.fxml"));
+                Camera camera = new PerspectiveCamera();
+                Scene scene = new Scene(root, 700, 400);
+                scene.setFill(Color.SILVER);
+                scene.setCamera(camera);
+                primaryStage.setTitle("SerialCoders' Games");
+                primaryStage.setScene(scene);
+                primaryStage.show();
+                Platform.runLater(alert::close);
+
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
+
+        Button newGameButton = createButton("New Game", 14, Color.BLACK, Color.web("#08d19a"), 843, 20);
+        newGameButton.setOnAction(e -> {
+            setNewGame();
+            Platform.runLater(alert::close);
+            primaryStage.show();
+        });
+
+        vbox.getChildren().addAll(homeButton, newGameButton);
+
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.getDialogPane().getChildren().remove(2);
+        alert.getDialogPane().setContent(vbox);
+
+        alert.showAndWait();
+
+    }
+
+    private void setNewGame() {
+        Stage primaryStage = (Stage) this.scene.getWindow();
+
+        Label labelQuarto = createLabel("Quarto", 18, 447, 0);
+        Label labelPlayer1 = createLabel("Player 1", 13, 14, 180);
+        Label labelPlaying1 = createLabel("Selecting", 11, 14, 200);
+        Label labelPlayer2 = createLabel("Player 2", 13, 830, 186);
+        Label labelPlaying2 = createLabel("Selecting", 11, 830, 206);
+
+        primaryStage.setTitle("Quarto");
+        primaryStage.setResizable(false);
+
+        Image backgroundImage = new Image(getClass().getResource("/fr/serialcoders/qawaleproject/img/quarto.jpg").toExternalForm());
+        ImageView backgroundImageView = new ImageView(backgroundImage);
+        backgroundImageView.setFitHeight(700);
+        backgroundImageView.setFitWidth(1000);
+
+        StackPane root = new StackPane(backgroundImageView);
+
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(932, 486);
+        labelPlaying2.setOpacity(0);
+
+        //Pause
+        Button buttonPause = createButton("Pause", 14, Color.BLACK, Color.web("#08d19a"), 20, 20);
+        buttonPause.setPrefSize(80, 30);
+
+        // End Game
+        Button buttonQuarto = createButton("Quarto !", 14, Color.BLACK, Color.web("#08d19a"), 356, 620);
+        buttonQuarto.setPrefSize(90, 30);
+
+        // End Turn
+        Button buttonEndTurn = createButton("End Turn", 14, Color.BLACK, Color.web("#08d19a"), 466, 620);
+
+        // Help
+        Button buttonHelp = createButton("?", 14, Color.BLACK, Color.web("#08d19a"), 888, 20);
+        buttonHelp.setPrefSize(30, 30);
+
+        AnchorPane piecePane = new AnchorPane();
+        piecePane.setAccessibleRole(javafx.scene.AccessibleRole.SCROLL_PANE);
+        piecePane.setDisable(true);
+        piecePane.setLayoutX(83);
+        piecePane.setLayoutY(49);
+        piecePane.setPrefSize(828, 381);
+
+        QuartoController controller = new QuartoController();
+        controller.setButtonQuarto(buttonQuarto);
+        controller.setButtonHelp(buttonHelp);
+        controller.setButtonPause(buttonPause);
+        controller.setButtonEndTurn(buttonEndTurn);
+        controller.setLabelPlaying1(labelPlaying1);
+        controller.setLabelPlaying2(labelPlaying2);
+
+        anchorPane.getChildren().addAll(piecePane,
+                buttonPause, labelQuarto, labelPlayer1, labelPlaying1,
+                labelPlayer2, labelPlaying2, buttonQuarto, buttonEndTurn, buttonHelp);
+
+        root.getChildren().addAll(anchorPane);
+
+        Camera camera = new PerspectiveCamera();
+        Scene scene = new Scene(root, 932, 700,true, SceneAntialiasing.BALANCED);
+        controller.setScene(scene);
+        scene.setFill(Color.SILVER);
+        scene.setCamera(camera);
+
+        controller.initialize();
+
+        piecePane.getChildren().add(controller.getGroup());
+
+        primaryStage.setScene(scene);
     }
 
 }

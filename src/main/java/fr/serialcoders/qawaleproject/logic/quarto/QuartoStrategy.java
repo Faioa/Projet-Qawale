@@ -14,36 +14,47 @@ public class QuartoStrategy implements Strategy {
 
         for (int j = 0; j < 4; j++) {
             win = true;
-            Piece origin = grid.getCell(j, j).getPiece();
-            if (origin == null)
-                continue;
 
-            //Lines
+            // Lines
             maxAge = 0;
-            for (int i = 0; i < 4; i++) {
-                Piece lig=  grid.getCell(j, i).getPiece();
-                if (lig== null || !origin.compare(lig)) {
-                    win = false;
-                    break;
+            for (int k = 0; k < 3; k++) {
+                Piece p1 = grid.getCell(j, k).getPiece();
+                for (int i = k; i < 3 - k; i++) {
+                    Piece p2 = grid.getCell(j, i + 1).getPiece();
+                    if (p1 == null || !p1.compare(p2)) {
+                        win = false;
+                        break;
+                    }
+                    if (maxAge < p1.getAge())
+                        maxAge = p1.getAge();
+                    if (maxAge < p2.getAge())
+                        maxAge = p2.getAge();
                 }
-                if (maxAge < lig.getAge())
-                    maxAge = lig.getAge();
+                if (!win)
+                    break;
             }
             if (win) {
                 if (win(maxAge, grid.getAge()))
                     return true;
             }
 
-            //Columns
+            // Columns
             maxAge = 0;
-            for (int i = 0; i < 4; i++) {
-                Piece col =  grid.getCell(i, j).getPiece();
-                if (col == null || !origin.compare(col)) {
-                    win = false;
-                    break;
+            for (int k = 0; k < 3; k++) {
+                Piece p1 = grid.getCell(k, j).getPiece();
+                for (int i = k; i < 3 - k; i++) {
+                    Piece p2 = grid.getCell(i + 1, j).getPiece();
+                    if (p1 == null || !p1.compare(p2)) {
+                        win = false;
+                        break;
+                    }
+                    if (maxAge < p1.getAge())
+                        maxAge = p1.getAge();
+                    if (maxAge < p2.getAge())
+                        maxAge = p2.getAge();
                 }
-                if (maxAge < col.getAge())
-                    maxAge = col.getAge();
+                if (!win)
+                    break;
             }
             if (win) {
                 if (win(maxAge, grid.getAge()))
@@ -51,41 +62,49 @@ public class QuartoStrategy implements Strategy {
             }
         }
 
-        // Diagonal 1
+        // 1st Diagonal
         maxAge = 0;
         win = true;
-        for (int i = 0; i < 3; i++) {
-            Piece p = grid.getCell(i, i).getPiece();
-            Piece p2 = grid.getCell(i+1, i+1).getPiece();
-            if (p == null || p2 == null || !p.compare(p2)) {
-                win = false;
-                break;
+        for (int k = 0; k < 3; k++) {
+            Piece p1 = grid.getCell(k, k).getPiece();
+            for (int i = k; i < 3 - k; i++) {
+                Piece p2 = grid.getCell(i + 1, i + 1).getPiece();
+                if (p1 == null || !p1.compare(p2)) {
+                    win = false;
+                    break;
+                }
+                if (maxAge < p1.getAge())
+                    maxAge = p1.getAge();
+                if (maxAge < p2.getAge())
+                    maxAge = p2.getAge();
             }
-            if (maxAge < p.getAge())
-                maxAge = p.getAge();
-            if (maxAge < p2.getAge())
-                maxAge = p2.getAge();
+            if (!win)
+                break;
         }
         if (win) {
             if (win(maxAge, grid.getAge()))
                 return true;
         }
 
-        // Diagonal 2
+        // 2nd Diagonal
         maxAge = 0;
         win = true;
-        for (int i = 0; i < 3;  i++) {
-            Piece p = grid.getCell(i, 3 - i).getPiece();
-            Piece p2 = grid.getCell(i+1, 3 - i - 1).getPiece();
+        for (int k = 0; k < 3; k++) {
+            Piece p1 = grid.getCell(k, 3 - k).getPiece();
+            for (int i = 0; i < 3; i++) {
+                Piece p2 = grid.getCell(i + 1, 3 - i - 1).getPiece();
 
-            if (p == null || p2 == null || !p.compare(p2)) {
-                win = false;
-                break;
+                if (p1 == null || !p1.compare(p2)) {
+                    win = false;
+                    break;
+                }
+                if (maxAge < p1.getAge())
+                    maxAge = p1.getAge();
+                if (maxAge < p2.getAge())
+                    maxAge = p2.getAge();
             }
-            if (maxAge < p.getAge())
-                maxAge = p.getAge();
-            if (maxAge < p2.getAge())
-                maxAge = p2.getAge();
+            if (!win)
+                break;
         }
         if (win) {
             if (win(maxAge, grid.getAge()))
